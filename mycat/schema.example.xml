@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE mycat:schema SYSTEM "schema.dtd">
+<mycat:schema xmlns:mycat="http://org.opencloudb/">
+
+	<!-- user service schema start -->
+	<schema name="userdb" checkSQLschema="false" sqlMaxLimit="100">
+		<!-- logic tables -->
+		<table name="admins" primaryKey="id" dataNode="dn1-user,dn2-user" type="global"/>
+		<table name="id_card_codes" primaryKey="id" dataNode="dn1-user,dn2-user" type="global"/>
+		<table name="business_types" primaryKey="id" dataNode="dn1-user,dn2-user" type="global"/>
+		<table name="train_addresses" primaryKey="id" dataNode="dn1-user,dn2-user" type="global"/>
+		<table name="train_address_city_managers" primaryKey="id" dataNode="dn1-user,dn2-user" type="global"/>
+		<table name="recruits" primaryKey="id" dataNode="dn1-user,dn2-user" type="global"/>
+		<table name="mobiles" primaryKey="mobile" dataNode="dn1-user,dn2-user" rule="sharding-by-pattern-mobile"/>
+		<table name="users" primaryKey="id" dataNode="dn1-user,dn2-user" rule="sharding-by-pattern-id"/>
+		<table name="user_attrs" primaryKey="user_id" dataNode="dn1-user,dn2-user" rule="sharding-by-pattern-user-id"/>
+		<table name="couriers" primaryKey="user_id" dataNode="dn1-user,dn2-user" rule="sharding-by-pattern-user-id"/>
+		<table name="devices" primaryKey="user_id" dataNode="dn1-user,dn2-user" rule="sharding-by-pattern-user-id"/>
+		<table name="merchants" primaryKey="user_id" dataNode="dn1-user,dn2-user" rule="sharding-by-pattern-user-id"/>
+		<table name="partners" primaryKey="user_id" dataNode="dn1-user,dn2-user" rule="sharding-by-pattern-user-id"/>
+		<table name="third_users" primaryKey="user_id" dataNode="dn1-user,dn2-user" rule="sharding-by-pattern-user-id"/>
+		<table name="user_profiles" primaryKey="user_id" dataNode="dn1-user,dn2-user" rule="sharding-by-pattern-user-id"/>
+		<table name="user_session_tokens" primaryKey="user_id" dataNode="dn1-user,dn2-user" rule="sharding-by-pattern-user-id"/>
+	</schema>
+	<dataNode name="dn1-user" dataHost="localhost" database="user1" />
+	<dataNode name="dn2-user" dataHost="localhost" database="user2" />
+	<!-- user service schema end -->
+
+	<!-- real hosts -->
+	<dataHost name="localhost" maxCon="100" minCon="10"
+		balance="0" writeType="0" dbType="mysql" dbDriver="native" switchType="1" slaveThreshold="100">
+		<!-- heartbeat sql -->
+		<heartbeat>select user()</heartbeat>
+		<!-- can have multi write hosts -->
+		<writeHost host="hostM1" url="localhost:3306" user="root" password="root" />
+	</dataHost>
+
+</mycat:schema>
