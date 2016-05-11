@@ -13,8 +13,6 @@ MONGO_DATA_DIR=$MONGO_HOME/data
 mkdir $MONGO_HOME
 mkdir $MONGO_LOG_DIR
 mkdir $MONGO_DATA_DIR
-chown -R mongod:mongod $MONGO_HOME
-
 
 MONGO_YUM_REPO=/etc/yum.repos.d/mongodb-org-3.2.repo
 
@@ -41,6 +39,8 @@ storage:
   journal:
     enabled: true
 ' > $MONGO_CONF
+
+chown -R mongod:mongod $MONGO_HOME
 
 chkconfig mongod on
 
